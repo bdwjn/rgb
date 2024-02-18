@@ -13,16 +13,15 @@ int main(void)
 	int bytes = fread(in, 1, 1000000, f);
 	fclose(f);
 
-	memcpy(out, in, bytes);
-
-/* benchmark: run it 100.000 times */
-#ifdef BENCH
+	/* benchmark: run it 100.000 times */
+#	ifdef BENCH
 	for (int i=0; i<100000; i++)
-#endif
-		process_N_pixels(out, bytes - (bytes % 96));
+		process_N_pixels(in, bytes - (bytes % 96));
+	/* no benchmark: perform a self-test by doing the grayscale in Cs */
+#	else
+	memcpy(out, in, bytes);
+	process_N_pixels(out, bytes - (bytes % 96));
 
-/* no benchmark: perform a self-test by doing the grayscale in C */
-#ifndef BENCH
 	for (int i=0; i<bytes; i+=3) {
 		int correct = (in[i] + in[i+1] + in[i+2]) / 3;
 
@@ -38,6 +37,6 @@ int main(void)
 	f = fopen("baboon-gray.raw", "wb");
 	fwrite(out, 1, bytes, f);
 	fclose(f);
-#endif
 
+#	endif
 }
