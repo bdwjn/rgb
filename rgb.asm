@@ -53,8 +53,6 @@ add            rsi, rdi                ; rsi = end of buffer
 	movdqu     xmm0, [rdi+16]          ; ymm0 = BE =  g5  b5  r6 ... g10  |  g21 b21 r22 ... g26
 	movdqu     xmm1, [rdi]             ; ymm1 = AF =  r0  g0  b0 ...  r5  |  b26 r27 g27 ... b31
 
-	;prefetcht0 [rdi+4096]
-
 	vpand      ymm3, ymm0, ymm12       ; _00f_00f    red | red
 	vpand      ymm5, ymm0, ymm13       ; _f00_0f0    green | blue
 	vpand      ymm4, ymm1, ymm14       ; _0f0_f00
@@ -67,13 +65,6 @@ add            rsi, rdi                ; rsi = end of buffer
 	vpand      ymm4, ymm2, ymm12       ; _00f_00f
 	vpor       ymm5, ymm5, ymm4        ; ymm4      =  g5  g0 g11 ... g10  |  b26 b21 b16 ... b31
 	vpshufb    ymm4, ymm5, ymm7        ; ymm4      =  g0 g11  g6 ...  g5  |  b16 b27 b22 ... b21
-
-	; vpand      ymm4, ymm0, ymm13       ; _f00_0f0    green | blue
-	; vpand      ymm5, ymm1, ymm14       ; _0f0_f00
-	; vpor       ymm4, ymm4, ymm5
-	; vpand      ymm5, ymm2, ymm12       ; _00f_00f
-	; vpor       ymm4, ymm4, ymm5        ; ymm4      =  g5  g0 g11 ... g10  |  b26 b21 b16 ... b31
-	; vpshufb    ymm4, ymm4, ymm7        ; ymm4      =  g0 g11  g6 ...  g5  |  b16 b27 b22 ... b21
 
 	vpand      ymm5, ymm0, ymm14       ; _0f0_f00    blue | green
 	vpand      ymm0, ymm1, ymm12       ; _00f_00f
